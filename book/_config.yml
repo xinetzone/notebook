@@ -134,3 +134,22 @@ githubEmojis:
   inject: true
   styles:
   customEmojis:
+
+# 添加 RSS 订阅支持
+## https://github.com/hexojs/hexo-generator-feed
+## npm install hexo-generator-feed
+feed:
+  # Generate both atom and rss2 feeds
+  type:
+    - atom
+    - rss2
+  path:
+    - atom.xml
+    - rss2.xml
+
+# 为了支持 Katex，还需要安装 pandoc，以及
+## npm un hexo-renderer-marked
+## https://github.com/wzpan/hexo-renderer-pandoc
+## npm install hexo-renderer-pandoc
+pandoc:
+  mathEngine: katex
