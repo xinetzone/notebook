@@ -253,4 +253,4 @@ post_asset_folder: true # true 支持图片本地上传
 $ npm install hexo-deployer-git --save
 ```
 
-如果您觉得麻烦，可以直接 fork 我已经配置好的博客模板 [xinetzone-matery](https://github.com/xinetzone/xinetzone.github.io) 并按照 README 进行操作即可。
+如果您觉得麻烦，可以直接 fork 我已经配置好的博客模板 [notebook](https://github.com/xinetzone/notebook) 并按照 README 进行操作即可。

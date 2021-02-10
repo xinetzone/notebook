@@ -46,7 +46,7 @@ $y=A\tan(\omega x + \varphi)$ 与 $y=A\cot(\omega x + \varphi)$ 的最小正周�
 9. $\arcsin{x} + \arccos{x} = \frac \pi 2$，$x\in [-1,1]$
 10. $\arctan{x} + arccot{x} = \frac \pi 2$，$x\in \mathbb{R}$
 
-## 3 在 $\triangle{ABC}$ 中的等式
+## 3 三角形中的等式
 
 $$
 \begin{aligned}

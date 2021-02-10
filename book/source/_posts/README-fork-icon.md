@@ -14,10 +14,10 @@ summary: 在 Github 自述文档添加 fork 等动态图标。
 一般比较正式的开源项目会在 `README.md` 的开头添加类似如下图标：
 
 <p align="center"> 
-<a href="https://xinetzone.github.io" target="_blank" rel="noopener noreferrer"><img width="100" src="https://xinetzone.github.io/favicon.png" alt="Blog logo"></a>
+<a href="https://xinetzone.github.io/dao" target="_blank" rel="noopener noreferrer"><img width="100" src="https://xinetzone.github.io/dao/favicon.png" alt="Blog logo"></a>
 </p>
 
-<p align="center">
+<p align="left">
 <a href="https://www.gnu.org/licenses/"><img src="https://img.shields.io/github/license/xinetzone/xinetzone.github.io.svg" alt="License"></a>
 <a href="http://hits.dwyl.io/xinetzone/xinetzonegithubio"><img src="http://hits.dwyl.io/xinetzone/xinetzonegithubio.svg" alt="HitCount"></a>
 <a href="https://github.com/xinetzone/xinetzone.github.io/network"><img src="https://img.shields.io/github/forks/xinetzone/xinetzone.github.io.svg" alt="GitHub forks"></a> <a href="https://github.com/xinetzone/xinetzone.github.io/stargazers"><img src="https://img.shields.io/github/stars/xinetzone/xinetzone.github.io.svg" alt="GitHub stars"></a>
