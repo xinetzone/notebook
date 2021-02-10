@@ -51,7 +51,7 @@ def add(x:int, y:int=2) -> int:
 
 这就是被称为 `function annotation` 的写法。使用冒号 `:` 加类型名来代表参数的类型，使用箭头 `->` 加类型表示返回值的类型。注解部分不会被 Python 解析器所解析。只是一种注解的方式，类似于：
 
-```python {cmd=true id="izdlk700"}
+```python
 def add(x, y):
     '''
     x: int
@@ -65,7 +65,7 @@ def add(x, y):
 
 比如，您像这样 `add(1.2, 3.0)` 传入参数，Python 解释器并不会报错。
 
-```python {cmd=true continue="izdlk700" id="izdlkhso"}
+```python
 print("print 'add(1.2, 3.0)', result is", add(1.2, 3.0))
 ```
 
@@ -90,7 +90,7 @@ inspect.isclass(add)  # 判断add是否是类
 
 如果对函数的参数进行检查呢？这个需要借助 `sig=inspect.signature`：
 
-```python {cmd=true continue="izdlk700" id="izdlksso"}
+```python
 from inspect import signature
 # 获得函数的签名
 sig = signature(add)
