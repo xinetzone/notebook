@@ -10,7 +10,6 @@ tags:
   - git
   - github
 categories: 教程
-abbrlink: ad2d8036
 date: 2019-09-14 10:40:44
 updated:
 password:
@@ -26,7 +25,7 @@ password:
 
 ## 1 Git 基础
 
-![git 速查表](http://justinhileman.info/article/git-pretty/git-pretty.png)
+![git 速查表](git-pretty.png)
 
 Git 学习资源：
 

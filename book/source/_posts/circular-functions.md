@@ -7,7 +7,6 @@ comments: true
 lang: zh-CN
 tags: 三角函数
 categories: 数学
-abbrlink: 5640f8b3
 date: 2020-02-14 20:13:46
 password:
 summary:

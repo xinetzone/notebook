@@ -13,8 +13,8 @@ timezone: 'Asia/Shanghai'
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://example.com/child' and root as '/child/'
-url: https://xinetzone.github.io/notebook
-root: /notebook/
+url: https://xinetzone.github.io/dao
+root: /dao/
 ## npm install hexo-abbrlink2
 ### https://github.com/rozbo/hexo-abbrlink2
 permalink: :lang/:abbrlink/ # :year/:month/:day/:title/
@@ -70,7 +70,7 @@ prismjs:
 # order_by: Posts order. (Order by date descending by default)
 index_generator: # 通过 hexo-generator-index 生成文章的 archive
   path: '' # Root path for your blog’s index page
-  per_page: 10 # Posts displayed per page
+  per_page: 12 # Posts displayed per page 首页放置的页面数量
   order_by: -date # Posts order. Order by descending date (new to old) by default.
 
 # Category & Tag
@@ -122,7 +122,7 @@ theme_config: # 主题的配置文件。在这里放置的配置会覆盖主题�
 deploy:
   type: git
   # <repository url> https://bitbucket.org/JohnSmith/johnsmith.bitbucket.io
-  repo: https://github.com/xinetzone/notebook.git
+  repo: git@github.com:xinetzone/dao.git
   branch: gh-pages
 
 # 添加emoji表情支持

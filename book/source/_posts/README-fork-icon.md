@@ -6,7 +6,6 @@ toc: true
 lang: zh-CN
 tags: [README, 开源项目]
 categories: 项目
-abbrlink: f7c6a6b8
 date: 2019-09-02 23:25:07
 password:
 summary: 在 Github 自述文档添加 fork 等动态图标。

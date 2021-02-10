@@ -1,12 +1,11 @@
 ---
-title: Hexo+vscode+github pages 搭建属于自己的博客
+title: GitHub Pages 搭建属于自己的博客
 top: false
 cover: false
 toc: true
 lang: zh-CN
 tags: [github pages, hexo]
 categories: 教程
-abbrlink: 41cccb40
 date: 2019-09-02 14:34:07
 password:
 summary: 利用 hexo-theme-matery 借由 vscode 与 Github Pages 搭建属于自己的博客。

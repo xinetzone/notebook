@@ -6,7 +6,6 @@ toc: true
 lang: zh-CN
 tags: [github pages, hexo]
 categories: 教程
-abbrlink: 3567ebbb
 date: 2019-09-02 21:06:59
 password:
 summary: hexo-theme-matery 主题自定义修改

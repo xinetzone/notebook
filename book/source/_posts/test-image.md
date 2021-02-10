@@ -1,5 +1,5 @@
 ---
-title: test-image
+title: 测试上传图片到 Hexo
 lang: zh-CN
 date: 2021-02-09 23:40:06
 updated:
