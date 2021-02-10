@@ -52,7 +52,7 @@ marked:
 relative_link: false # 把链接改为与根目录的相对位址
 future: true # 显示未来的文章
 highlight:
-  enable: flase
+  enable: false
   line_number: true
   auto_detect: false # 自动检测代码块的语言，很耗资源
   tab_replace: ''
