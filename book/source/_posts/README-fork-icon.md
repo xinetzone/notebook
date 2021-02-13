@@ -1,14 +1,17 @@
 ---
 title: github 编写 README 时如何获取 fork 等图标
-top: false # 推荐文章（文章是否置顶）
-cover: true # 表示该文章是否需要加入到首页轮播封面中
+top: false
+cover: true
 toc: true
 lang: zh-CN
-tags: [README, 开源项目]
+tags:
+  - README
+  - 开源项目
 categories: 项目
+summary: 在 Github 自述文档添加 fork 等动态图标。
+abbrlink: f7c6a6b8
 date: 2019-09-02 23:25:07
 password:
-summary: 在 Github 自述文档添加 fork 等动态图标。
 ---
 
 一般比较正式的开源项目会在 `README.md` 的开头添加类似如下图标：

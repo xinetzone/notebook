@@ -4,11 +4,14 @@ top: false
 cover: false
 toc: true
 lang: zh-CN
-tags: [github pages, hexo]
+tags:
+  - github pages
+  - hexo
 categories: 教程
+summary: 开箱即用搭建 Matery 主题博客
+abbrlink: 5c000469
 date: 2019-09-02 21:06:59
 password:
-summary: 开箱即用搭建 Matery 主题博客
 ---
 
 ## 从零开始搭建 Hexo 博客

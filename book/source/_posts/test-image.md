@@ -1,10 +1,13 @@
 ---
 title: 测试上传图片到 Hexo
 lang: zh-CN
+tags:
+  - test
+  - hexo
+categories: hexo
+abbrlink: a244c33c
 date: 2021-02-09 23:40:06
 updated:
-tags: [test, hexo]
-categories: hexo
 ---
 
 ## 测试上传图片

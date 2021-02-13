@@ -4,11 +4,14 @@ top: false
 cover: false
 toc: true
 lang: zh-CN
-tags: [github pages, hexo]
+tags:
+  - github pages
+  - hexo
 categories: 教程
+summary: 利用 hexo-theme-matery 借由 vscode 与 Github Pages 搭建属于自己的博客。
+abbrlink: 2167bb13
 date: 2019-09-02 14:34:07
 password:
-summary: 利用 hexo-theme-matery 借由 vscode 与 Github Pages 搭建属于自己的博客。
 ---
 
 参考：[超详细Hexo+Github博客搭建小白教程](https://godweiyang.com/2018/04/13/hexo-blog/#toc-heading-1/)

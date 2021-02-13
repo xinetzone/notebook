@@ -8,6 +8,7 @@ lang: zh-CN
 summary: 数学归纳法简介
 tags: 数学归纳法
 categories: 数学
+abbrlink: '886e6229'
 date: 2020-02-14 10:14:03
 password:
 ---

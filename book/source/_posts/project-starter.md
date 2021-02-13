@@ -9,10 +9,11 @@ tags:
   - git
   - github
 categories: 项目
+summary: 主要针对“如何构建一个属于自己的计算机视觉项目”为主题进行展开。
+abbrlink: e6d6f9e7
 date: 2019-09-18 16:40:59
 updated:
 password:
-summary: 主要针对“如何构建一个属于自己的计算机视觉项目”为主题进行展开。
 ---
 
 本章主要针对“如何构建一个属于自己的计算机视觉项目”为主题进行展开。
