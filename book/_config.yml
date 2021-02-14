@@ -153,18 +153,9 @@ githubEmojis:
 feed:
   # Generate both atom and rss2 feeds
   type:
-    - atom
     - rss2
   path:
-    - atom.xml
     - rss2.xml
-
-# 为了支持 Katex，还需要安装 pandoc，以及
-## npm un hexo-renderer-marked
-## https://github.com/wzpan/hexo-renderer-pandoc
-## npm install hexo-renderer-pandoc
-pandoc:
-  mathEngine: katex
 
 ## 添加动漫人物 
 live2d:  # https://github.com/EYHN/hexo-helper-live2d/blob/master/README.zh-CN.md

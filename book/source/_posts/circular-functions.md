@@ -49,15 +49,11 @@ $y=A\tan(\omega x + \varphi)$ 与 $y=A\cot(\omega x + \varphi)$ 的最小正周�
 
 ## 3 三角形中的等式
 
-$$
-\begin{aligned}
-&\tan{\alpha} + \tan{B} + \tan C = \tan A \cdot \tan B \cdot \tan C\\
-&\cot A \cot B + \cot B \cot C + \cot C \cot A = 1\\
-&\sin^2 A + \sin^2 B + \sin^2 C = 2(1+ \cos A \cos B \cos C)\\
-&\cos^2 A + \cos^2 B + \cos^2 C = 1 - 2 \cos A \cos B \cos C\\
-&\cfrac {\cot A + \cot B} {\tan A + \tan B} + \cfrac {\cot B + \cot C} {\tan B + \tan C} + \cfrac {\cot C + \cot A} {\tan C + \tan A} = 1
-\end{aligned}
-$$
+$$\tan A + \tan B + \tan C = \tan A \cdot \tan B \cdot \tan C$$
+$$\cot {A} \cot B + \cot B \cot C + \cot C \cot A = 1$$
+$$\sin^2 A + \sin^2 B + \sin^2 C = 2(1+ \cos A \cos B \cos C)$$
+$$\cos^2 A + \cos^2 B + \cos^2 C = 1 - 2 \cos A \cos B \cos C$$
+$$\cfrac {\cot A + \cot B} {\tan A + \tan B} + \cfrac {\cot B + \cot C} {\tan B + \tan C} + \cfrac {\cot C + \cot A} {\tan C + \tan A} = 1$$
 
 ## 4 三角形中的几个定理
 
@@ -65,27 +61,21 @@ $$
 
 1. 正弦定理：
 
-$$
-\cfrac a {\sin{A}} = \cfrac b {\sin{B}} = \cfrac c {\sin{C}} = 2R
-$$
+$$\frac {a} {\sin{A}} = \frac {b} {\sin{B}} = \frac {c} {\sin{C}} = 2R$$
 
 2. 余弦定理：
 
-$$
-\begin{array}{c}
-a^2 = b^2 + c^2 - 2bc \cos A\\
-b^2 = c^2 + a^2 - 2ca \cos B\\
-c^2 = a^2 + b^2 - 2ab \cos C
-\end{array}
-$$
+$$a^2 = b^2 + c^2 - 2bc \cos A$$
+$$b^2 = c^2 + a^2 - 2ca \cos B$$
+$$c^2 = a^2 + b^2 - 2ab \cos C$$
 
 3. 射影定理：
 
-$$
-\begin{array}{ccc}
-a = b \cos C + c \cos B, &b = c \cos A + a \cos C, & c = a \cos B + b \cos A
-\end{array}
-$$
+$$a = b \cos C + c \cos B$$
+
+$$b = c \cos A + a \cos C$$ 
+
+$$c = a \cos B + b \cos A$$
 
 4. 欧拉（Euler）定理：
 
@@ -93,20 +83,14 @@ $OI^2 = R^2 - 2Rr$，其中 $O, I$ 分别为 $\triangle ABC$ 的外心与内心�
 
 5. 半角公式：
 
-$$
-\begin{array}{c}
-&\sin{\cfrac A 2} = \sqrt{\cfrac{(p-b)(p-c)}{bc}} \\
-&\cos{\cfrac A 2} = \sqrt{\cfrac{p(p-a)}{bc}} 
-\end{array}
-$$
+$$\sin{\cfrac A 2} = \sqrt{\cfrac{(p-b)(p-c)}{bc}}$$
+$$\cos{\cfrac A 2} = \sqrt{\cfrac{p(p-a)}{bc}}$$
 
 6. 几个等式：
 
-$$
-\begin{array}{c}
-&\cfrac r R = 4 \sin{\cfrac A 2} \sin{\cfrac B 2} \sin{\cfrac C 2} = \cos A + \cos B + \cos C - 1\\
-&\cfrac {r_a} R =  4 \sin{\cfrac A 2} \cos{\cfrac B 2} \cos{\cfrac C 2}
-\end{array}
+$$\cfrac r R = 4 \sin{\cfrac A 2} \sin{\cfrac B 2} \sin{\cfrac C 2} = \cos A + \cos B + \cos C - 1$$
+
+$$\cfrac {r_a} R =  4 \sin{\cfrac A 2} \cos{\cfrac B 2} \cos{\cfrac C 2}
 $$
 
 其中 $r_a$ 为角 $\angle A$ 所对应的旁切圆半径。
@@ -114,13 +98,20 @@ $$
 7. 面积公式：
 
 $$
-\begin{aligned}
-S &= \frac 1 2 ab \sin C\\
-&= rp\\
-&= \sqrt{p(p-a)(p-b)(p-c)}\\
-&= 2R^2 \sin A \sin B \sin C\\
-&= \cfrac {abc} {4R}\\
-&= \frac 1 2 R^2 (\sin{2A} + \sin{2B}+ \sin{2C})\\
-&= \cfrac{a^2 \sin B \sin C}{2 \sin(B+C)}
-\end{aligned}
+S = \frac 1 2 ab \sin C
+= rp$$
+$$
+S = \sqrt{p(p-a)(p-b)(p-c)}
+= 2R^2 \sin A \sin B \sin C
+$$
+
+$$
+S
+= \cfrac {abc} {4R}
+= \frac 1 2 R^2 (\sin{2A} + \sin{2B}+ \sin{2C})
+$$
+
+$$
+S
+= \cfrac{a^2 \sin B \sin C}{2 \sin(B+C)}
 $$
