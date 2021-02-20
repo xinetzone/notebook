@@ -315,3 +315,4 @@ print("</body>")
 print("</html>")
 ```
 
+更多参考：[Python CGI编程](https://www.runoob.com/python3/python3-cgi-programming.html)|[cgi](https://docs.python.org/zh-cn/3.10/library/cgi.html)
