@@ -1,21 +1,15 @@
 ---
 title: 数学符号
-top: false
-cover: false
-toc: true
-comments: true
 lang: zh-CN
 summary: 数学符号
 tags: 数学符号
 categories: 数学
 abbrlink: ff8c971
-date:
-password:
 ---
 
 <link rel="stylesheet" href="https://xinetzone.github.io/w3css/4/w3.css">
 
-<h2 class="w3-card w3-light-grey">数字</h2>
+# 数字
 
 * $x$：标量
 * $\mathbf{x}$：向量
@@ -25,7 +19,7 @@ password:
 * $x_i$, $[\mathbf{x}]_i$：向量$\mathbf{x}$第$i$个元素
 * $x_{ij}$, $[\mathbf{X}]_{ij}$：矩阵$\mathbf{X}$第$i$行第$j$列的元素
 
-<h2 class="w3-card w3-light-grey">集合论</h2>
+# 集合论
 
 * $\mathcal{X}$: 集合
 * $\mathbb{Z}$: 整数集合
@@ -37,7 +31,7 @@ password:
 * $\mathcal{A}\setminus\mathcal{B}$：集合$\mathcal{B}$与集合$\mathcal{A}$相减
 
 
-<h2 class="w3-card w3-light-grey">函数和运算符</h2>
+# 函数和运算符
 
 * $f(\cdot)$：函数
 * $\log(\cdot)$：自然对数
@@ -55,7 +49,7 @@ password:
 * $\prod$: 连乘
 * $\stackrel{\mathrm{def}}{=}$：定义
 
-<h2 class="w3-card w3-light-grey">微积分</h2>
+# 微积分
 
 * $\frac{dy}{dx}$：$y$关于$x$的导数
 * $\frac{\partial y}{\partial x}$：$y$关于$x$的偏导数
@@ -63,7 +57,7 @@ password:
 * $\int_a^b f(x) \;dx$: $f$在$a$到$b$区间上关于$x$的定积分
 * $\int f(x) \;dx$: $f$关于$x$的不定积分
 
-<h2 class="w3-card w3-light-grey">概率与信息论</h2>
+# 概率与信息论
 
 * $P(\cdot)$：概率分布
 * $z \sim P$: 随机变量$z$具有概率分布$P$
@@ -79,6 +73,6 @@ password:
 * $H(X)$: 随机变量$X$的熵
 * $D_{\mathrm{KL}}(P\|Q)$: $P$和$Q$的KL-散度
 
-<h2 class="w3-card w3-light-grey">复杂度</h2>
+# 复杂度
 
 * $\mathcal{O}$：大O标记
