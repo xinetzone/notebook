@@ -24,14 +24,14 @@ summary:
 2. 直线的斜率 $k = \tan{\alpha}$（$\alpha \ne \frac \pi 2$）。
 3. 直线方程：
     - 点斜式：$y - y_0 = k(x-x_0)$
-    - 倾斜式：y = kx + b
+    - 倾斜式：$y = kx + b$
     - 两点式：$\cfrac{y-y_1}{y_2-y_1}=\cfrac{x-x_1}{x_2-x_1}$
     - 截距式：$\cfrac x a + \cfrac y b = 1$
     - 一般式：$Ax + By + C = 0, \; (A^2+B^2\ne 0)$
 
 ### 1.2 两条直线的位置关系
 
-设存在斜率的两条直线分为为 $l_1: y = kx_1 + b_1, l_2: y = kx_2 + _2$
+设存在斜率的两条直线分为为 $l_1: y = kx_1 + b_1, l_2: y = kx_2 + b_2$
 
 1. $l_1$ 与 $l_2$ 平行 $\hArr$ $k_1 = k_2, b_1 \ne b_2$
 2. $l_1$ 与 $l_2$ 重合 $\hArr$ $k_1 = k_2, b_1 = b_2$
@@ -41,9 +41,7 @@ summary:
 
 点 $P(x_0,y_0)$ 到直线 $Ax + By +C=0$ 的距离为
 
-$$
-d = \cfrac{|Ax_0 + By_0 + C|}{\sqrt{A^2+B^2}}
-$$
+$$\cfrac{|Ax_0 + By_0 + C|}{\sqrt{A^2+B^2}}$$
 
 ### 1.4 直线系
 
@@ -53,13 +51,13 @@ $$
 
 ### 1.5 直线的参数方程
 
-$$
-\tag{$t$ 为参数}
-\begin{cases}
+<article>
+$$\tag{$t$ 为参数} \begin{cases}
 x = x_0 + t\cos \alpha\\
 y = y_0 + t \sin \alpha
-\end{cases}
+\end{cases} 
 $$
+</article>
 
 ## 2 圆
 
@@ -76,12 +74,11 @@ $$
 
 过圆 $(x-a)^2 + (y-b)^2 = r^2$ 上一点 $(x_0,y_0)$ 的切线方程为：
 
-$$
-(x_0 - a)(x - a) + (y_0 - b)(y - b) = r^2
-$$
+$$(x_0 - a)(x - a) + (y_0 - b)(y - b) = r^2$$
 
 ### 2.4 圆的参数方程
 
+<article>
 $$
 \tag{$\theta$ 为参数}
 \begin{cases}
@@ -89,6 +86,7 @@ x = x_0 + r\cos \theta\\
 y = y_0 + r \sin \theta
 \end{cases}
 $$
+</article>
 
 ## 3 圆锥曲线
 
@@ -108,6 +106,7 @@ $$
 
 椭圆 $\cfrac {x^2} {a^2} + \cfrac {y^2} {b^2} = 1 \;(a > b > 0)$ 的参数方程为：
 
+<article>
 $$
 \tag{$\varphi$ 为参数，$0 \le \varphi < 2 \pi$}
 \begin{cases}
@@ -115,6 +114,7 @@ x = a \cos \varphi\\
 y = b \sin \varphi
 \end{cases}
 $$
+</article>
 
 ### 3.4 双曲线
 
@@ -135,6 +135,7 @@ $$
 
 ### 3.7 双曲线的参数方程
 
+<article>
 $$
 \tag{$\varphi$ 为参数，$0 \le \varphi < 2 \pi$}
 \begin{cases}
@@ -142,6 +143,7 @@ x = a \sec \varphi\\
 y = b \tan \varphi
 \end{cases}
 $$
+</article>
 
 ### 3.8 抛物线
 
@@ -155,6 +157,7 @@ $$
 
 双曲线 $\cfrac {x^2} {a^2} + \cfrac {y^2} {b^2} = 1 \;(a > b > 0)$ 的参数方程为：
 
+<article>
 $$
 \tag{$t$ 为参数，$t\in \mathbb{R}$}
 \begin{cases}
@@ -162,6 +165,7 @@ x = 2pt^2\\
 y = 2pt
 \end{cases}
 $$
+</article>
 
 ## 圆锥曲线系
 
