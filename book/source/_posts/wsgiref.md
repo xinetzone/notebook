@@ -1,11 +1,12 @@
 ---
-title: WSGI 实用程序和参考实现
+title: wsgiref
 lang: zh-CN
 tags: WSGI
-categories: 
-  - [手册, Python]
-abbrlink: c16a919d
-date: 2021-02-20 12:58:50
+categories:
+  - - 手册
+    - Python
+abbrlink: bf07bad1
+date: 2021-03-08 14:07:37
 description:
 updated:
 ---
