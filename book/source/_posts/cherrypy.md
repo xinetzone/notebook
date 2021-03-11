@@ -245,7 +245,7 @@ if __name__ == '__main__':
 
 函数 `quickstart(root=None, script_name='', config=None)`，利用参数 `config` 可以修改一些配置参数。
 
-`config` 可以是包含应用程序配置的文件或字典（`dict`）。如果包含 `[global]` 部分，这些配置项将在（站点范围内） `global` 中使用配置。下面创建一个配置文件 `base-server.toml`，内容如下：
+`config` 可以是包含应用程序配置的文件或字典（`dict`）。如果包含 `[global]` 部分，这些配置项将在（站点范围内） `global` 中使用配置。下面创建一个配置文件 `base-server.conf`，内容如下：
 
 ```toml
 [global]
@@ -267,7 +267,7 @@ class HelloWorld:
         # CherryPy 将为根 URI（"/"）调用此方法，并将其返回值发送给客户端
         return "Hello World!"
 
-config = 'configs/base-server.toml' # 这里也可以是 dict 形式
+config = 'configs/base-server.conf' # 这里也可以是 dict 形式
 cherrypy.quickstart(HelloWorld(), config=config)
 ```
 
@@ -413,7 +413,7 @@ class TemplateHtml(Html):
 
 template_path = 'templates/base.html'
 config_path = 'configs/base.toml'
-config = 'configs/base-server.toml'
+config = 'configs/base-server.conf'
 httpd = TemplateHtml(template_path, config_path)
 d = {'body': '''<h1>欢迎进入 Web 世界 <h1>
 <p>CherryPy</p>
@@ -475,7 +475,7 @@ class TemplateHtml(Html):
 
 template_path = 'templates/form.html'
 config_path = 'configs/form.toml'
-config = 'configs/base-server.toml'
+config = 'configs/base-server.conf'
 httpd = TemplateHtml(template_path, config_path)
 httpd.quickstart(app_config=config)
 ```
@@ -532,7 +532,7 @@ class TemplateHtml(Html):
 
 template_path = 'templates/form.html'
 config_path = 'configs/form.toml'
-config = 'configs/base-server.toml'
+config = 'configs/base-server.conf'
 httpd = TemplateHtml(template_path, config_path)
 httpd.quickstart(config=config)
 ```
@@ -633,7 +633,6 @@ class TemplateHtml(Html):
 
 template_path = 'templates/form.html'
 config_path = 'configs/form.toml'
-# config = 'configs/base-server.toml'
 conf = {
     'global': {
         'server.socket_port': 9999
@@ -647,13 +646,267 @@ conf = {
         'tools.staticdir.dir': './public'
     }
 }
-# cherrypy.config.update(conf)
 httpd = TemplateHtml(template_path, config_path)
 httpd.quickstart(server_config=conf)
+```
+
+这里 `conf` 是 `dict` 形式的，您也可以使用 `base.conf` 文件设计：
+
+```conf
+[global]
+server.socket_port = 9999
+
+[/]
+tools.sessions.on = True
+tools.staticdir.root = os.path.abspath('.')
+
+[/static]
+tools.staticdir.on = True
+tools.staticdir.dir = './public'
 ```
 
 在 `http://localhost:9999/` 上，您应该看到一个鲜艳的蓝色。
 
 CherryPy 提供了服务于单个文件或完整目录结构的支持。大多数情况下，这就是您将要做的，这就是上面的代码所演示的。首先，我们指出 [`root`](https://docs.cherrypy.org/en/latest/pkg/cherrypy.html#cherrypy.Application.root "cherrypy.Application.root") 所有静态内容的目录。出于安全考虑，这必须是绝对路径。如果在寻找与URL匹配的路径时只提供相对路径，CherryPy 会抱怨。
 
-然后我们指出路径段以之开头的所有URL `/static` 将用作静态内容。我们将该URL映射到 `public` 目录，它是 [`root`](https://docs.cherrypy.org/en/latest/pkg/cherrypy.html#cherrypy.Application.root "cherrypy.Application.root") 的直接子目录。整个 `public` 目录的子树将用作静态内容。CherryPy 将把 URL 映射到该目录中的路径。这就是为什么 `/static/css/main.css` 发现于 `public/css/main.css` .
+然后我们指出路径段以之开头的所有URL `/static` 将用作静态内容。我们将该URL映射到 `public` 目录，它是 [`root`](https://docs.cherrypy.org/en/latest/pkg/cherrypy.html#cherrypy.Application.root "cherrypy.Application.root") 的直接子目录。整个 `public` 目录的子树将用作静态内容。CherryPy 将把 URL 映射到该目录中的路径。这就是为什么 `/static/css/main.css` 发现于 `public/css/main.css`.
+
+### [给定 REST](https://docs.cherrypy.org/en/latest/tutorials.html#id10)
+
+如今，Web 应用程序公开某种数据模型（datamodel）或计算函数并不罕见。在不详细说明的情况下，一个策略是遵循  [REST principles edicted by Roy T. Fielding](http://www.ibm.com/developerworks/library/ws-restful/index.html)。
+
+大致来说，它假定您可以标识一个资源，并且可以通过该标识符来 address 该资源。
+
+你可能会问“为什么？”。好吧，大多数情况下，这些原则是为了确保您尽可能地将应用程序所公开的实体与操作或使用它们的方式分离开来。为了接受这一观点，开发人员通常会设计一个 Web API 来公开 (**URL**, **HTTP method**, **data**, **constraints**)。
+
+<article class="w3-card w3-padding w3-light-grey">
+注意：您可能经常会同时听到 <strong>REST</strong> 和 <strong>Web API</strong>。前者是提供后者的一种策略。本教程不会涉及整个 Web API 概念，因为它是一个更具吸引力的主题，但是您应该在线阅读更多有关它的内容。
+</article>
+
+让我们来看一个非常基本的 Web API 的小例子，它稍微遵循 REST 原理。
+
+```python
+import random
+import string
+
+import cherrypy
+
+
+@cherrypy.expose
+class StringGeneratorWebService:
+    @cherrypy.tools.accept(media='text/plain')
+    def GET(self):
+        return cherrypy.session.get('mystring')
+
+    def POST(self, length=8):
+        some_string = ''.join(random.sample(string.hexdigits, int(length)))
+        cherrypy.session['mystring'] = some_string
+        return some_string
+
+    def PUT(self, another_string):
+        cherrypy.session['mystring'] = another_string
+
+    def DELETE(self):
+        cherrypy.session.pop('mystring', None)
+
+
+if __name__ == '__main__':
+    conf = 'configs/rest.conf'
+    cherrypy.quickstart(StringGeneratorWebService(), config=conf)
+```
+
+其中 `rest.conf` 为：
+
+```conf
+[global]
+server.socket_host = "127.0.0.1"
+server.socket_port = 9999
+server.thread_pool = 10
+
+[/]
+request.dispatch = cherrypy.dispatch.MethodDispatcher()
+tools.sessions.on = True
+tools.response_headers.on = True
+tools.response_headers.headers = [('Content-Type', 'text/plain')]
+```
+
+在我们付诸实践之前，让我们解释一些事情。直到现在，CherryPy 仍在创建一棵暴露的方法树，用于匹配URL。对于我们的 Web API，我们想强调实际请求的 HTTP 方法所扮演的角色。因此，我们创建了以它们命名的方法，并通过用 `cherrypy.expose` 装饰类本身来一次公开它们。
+
+但是，对于知道整个 HTTP 方法 shenanigan 的方法，我们必须从匹配 URL 的默认机制切换到 method。这就是我们在 `rest.conf` 中创建 `MethodDispatcher` 实例的过程。
+
+然后，我们将响应的内容类型强制为 `text/plain`，最后确保在请求中设置了 `Accept: text/plain` 标头，从而确保 GET 请求仅响应接受该内容类型的客户端。但是，我们仅针对该 HTTP 方法执行此操作，因为它对其他方法没有多大意义。
+
+就本教程而言，我们将使用 Python 客户端而不是您的浏览器，否则我们将无法实际尝试使用我们的 Web API。
+
+另外，为了测试效果，不再使用浏览器，而是使用 `requests` 模块:
+
+```Python
+>>> import requests
+>>> s = requests.Session()
+>>> r = s.get('http://127.0.0.1:8080/')
+>>> r.status_code
+500
+>>> r = s.post('http://127.0.0.1:8080/')
+>>> r.status_code, r.text
+(200, u'04A92138')
+>>> r = s.get('http://127.0.0.1:8080/')
+>>> r.status_code, r.text
+(200, u'04A92138')
+>>> r = s.get('http://127.0.0.1:8080/', headers={'Accept': 'application/json'})
+>>> r.status_code
+406
+>>> r = s.put('http://127.0.0.1:8080/', params={'another_string': 'hello'})
+>>> r = s.get('http://127.0.0.1:8080/')
+>>> r.status_code, r.text
+(200, u'hello')
+>>> r = s.delete('http://127.0.0.1:8080/')
+>>> r = s.get('http://127.0.0.1:8080/')
+>>> r.status_code
+500
+```
+
+前 500 响应和后 500 响应来自以下事实：在第一种情况下，我们尚未通过 POST 生成字符串，而在后一种情况下，删除后该字符串不存在。
+
+第 12-14 行显示了当我们的客户端请求将生成的字符串作为 JSON 格式请求时，应用程序如何做出反应。由于我们将 Web API 配置为仅支持纯文本，因此它将返回适当的 [HTTP 错误代码](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.7)。
+
+注意：我们使用请求的 Session 接口，以便在每个后续请求中都携带存储在请求 cookie 中的会话 ID。
+
+### 使用 Ajax 使其更流畅
+
+近年来，Web 应用程序已经摆脱了“HTML表单+刷新整个页面”的简单模式。这种传统方案仍然可以很好地发挥作用，但是用户已经习惯于不刷新整个页面的网络应用程序。广义上讲，Web 应用程序带有在客户端执行的代码，这些代码可以与后端通信，而不必刷新整个页面。
+
+1. 创建样式表 `public/css/main.css`：
+
+```css
+body {
+    background-color: blue;
+}
+
+#the-string {
+    display: none;
+}
+```
+
+2. 我们添加了一个有关元素的简单规则，该元素将显示生成的字符串。默认情况下，我们不显示它。将以下 HTML 代码保存到名为 `index.html` 的文件中。
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="/static/css/main.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#generate-string").click(function (e) {
+                $.post("/generator", { "length": $("input[name='length']").val() })
+                    .done(function (string) {
+                        $("#the-string").show();
+                        $("#the-string input").val(string);
+                    });
+                e.preventDefault();
+            });
+
+            $("#replace-string").click(function (e) {
+                $.ajax({
+                    type: "PUT",
+                    url: "/generator",
+                    data: { "another_string": $("#the-string input").val() }
+                })
+                    .done(function () {
+                        alert("Replaced!");
+                    });
+                e.preventDefault();
+            });
+
+            $("#delete-string").click(function (e) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "/generator"
+                })
+                    .done(function () {
+                        $("#the-string").hide();
+                    });
+                e.preventDefault();
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+    <input type="text" value="8" name="length" />
+    <button id="generate-string">Give it now!</button>
+    <div id="the-string">
+        <input type="text" />
+        <button id="replace-string">Replace</button>
+        <button id="delete-string">Delete it</button>
+    </div>
+</body>
+
+</html>
+```
+
+我们将出于简单的目的使用 jQuery 框架，但请随时用您喜欢的工具替换它。该页面由简单的 HTML 元素组成，以获取用户输入并显示生成的字符串。它还包含用于与实际执行艰苦工作的后端 API 进行通信的客户端代码。
+
+最后，这是应用程序的代码，该代码用于上方的 HTML 页面，并响应生成字符串的请求。两者都由同一应用程序服务器托管。
+
+```python
+import os
+import os.path
+import random
+import string
+
+import cherrypy
+
+
+class StringGenerator:
+    @cherrypy.expose
+    def index(self):
+        return open('index.html')
+
+
+@cherrypy.expose
+class StringGeneratorWebService:
+
+    @cherrypy.tools.accept(media='text/plain')
+    def GET(self):
+        return cherrypy.session.get('mystring')
+
+    def POST(self, length=8):
+        some_string = ''.join(random.sample(string.hexdigits, int(length)))
+        cherrypy.session['mystring'] = some_string
+        return some_string
+
+    def PUT(self, another_string):
+        cherrypy.session['mystring'] = another_string
+
+    def DELETE(self):
+        cherrypy.session.pop('mystring', None)
+
+
+if __name__ == '__main__':
+    conf = {
+        '/': {
+            'tools.sessions.on': True,
+            'tools.staticdir.root': os.path.abspath(os.getcwd())
+        },
+        '/generator': {
+            'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
+            'tools.response_headers.on': True,
+            'tools.response_headers.headers': [('Content-Type', 'text/plain')],
+        },
+        '/static': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': './public'
+        }
+    }
+    webapp = StringGenerator()
+    webapp.generator = StringGeneratorWebService()
+    cherrypy.quickstart(webapp, '/', conf)
+```
+
+转到 `http://127.0.0.1:8080/` 并使用输入和按钮来生成，替换或删除字符串。请注意，页面只是部分内容而没有刷新。
+
+还请注意，您的前端如何使用简单但干净的 Web 服务 API 与后端进行对话。非 HTML 客户端可以轻松使用相同的 API。
