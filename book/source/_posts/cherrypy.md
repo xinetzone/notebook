@@ -112,11 +112,138 @@ CherryPy 不是由一层组成，而是由四个独立的 API 层组成。
 
 ## 使用手册
 
-一些基础教程可以查阅：[CherryPy 教程@简书](https://www.jianshu.com/p/16dc6e4dc556)。下面介绍一些进阶是教程。
+首先了解一些基础知识。
+
+### 基础教程
+
+下面的示例演示了用 CherryPy 编写的最基本的应用程序。它启动一个服务器并托管一个应用程序，该应用程序将在请求时提供服务到 <http://127.0.0.1:8080/>。
+
+```python
+import cherrypy
+
+class HelloWorld:
+    @cherrypy.expose
+    def index(self):
+        return "你好世界！"
+
+cherrypy.quickstart(HelloWorld())
+```
+
+此时，终端可以看到：
+
+![](hello.png)
+
+这告诉你一些事情。前三行表示服务器将处理 [`signal`](https://docs.python.org/3/library/signal.html#module-signal "(在 Python v3.8)") 。下一行告诉您服务器的当前状态，因为此时服务器处于 `STARTING` 阶段。然后，系统会通知您的应用程序没有为其设置特定的配置。接下来，服务器启动一些内部实用程序，稍后我们将对此进行解释。最后，服务器表明它现在已经准备好接受传入的通信，因为它正在监听地址 `127.0.0.1:8080`。换句话说，在那个阶段，您的应用程序就可以使用了。
+
+然后，在浏览器打开输入网址： <http://127.0.0.1:8080/>，可以看到：
+
+![](hello1.png)
+
+#### [不同的函数产生不同的 URL](https://docs.cherrypy.org/en/latest/tutorials.html#id5)
+
+显然，您的应用程序可能会处理多个 URL。假设您有一个应用程序，每次调用它时都会生成一个随机字符串：
+
+```python
+import random
+import string
+
+import cherrypy
+
+
+class StringGenerator:
+    @cherrypy.expose
+    def index(self):
+        return "你好世界！"
+
+    @cherrypy.expose
+    def generate(self):
+        return ''.join(random.sample(string.hexdigits, 8))
+
+
+if __name__ == '__main__':
+    cherrypy.quickstart(StringGenerator())
+```
+
+现在转到 `http://localhost:8080/generate`，您的浏览器将显示一个随机字符串。
+
+![](urls.png)
+
+让我们花一分钟时间来分解这里发生的事情。这是您在浏览器中键入的 URL: [http://localhost:8080/generate](http://localhost:8080/generate)
+
+此 URL 包含多个部分：
+
+*   `http://` 这大致表明它是一个使用 HTTP 协议的 URL（请参见 [**RFC 2616**](https://tools.ietf.org/html/rfc2616.html) ）
+
+*   `localhost:8080` 是服务器的地址。它由主机名和端口组成。
+
+*   `/generate` 它是 URL 的路径段。这就是 CherryPy 用来定位 [exposed](https://docs.cherrypy.org/en/latest/glossary.html#term-exposed) 响应的函数或方法。
+
+在这里，CherryPy 使用 [`index()`](https://docs.cherrypy.org/en/latest/pkg/cherrypy.lib.covercp.html#cherrypy.lib.covercp.CoverStats.index "cherrypy.lib.covercp.CoverStats.index") 方法处理 `/` 以及 `generate()` 方法处理 `/generate`。
+
+当然也可以是中文作为方法名称，比如：
+
+```python
+import random
+import string
+
+import cherrypy
+
+
+class StringGenerator:
+    @cherrypy.expose
+    def index(self):
+        return "你好世界！"
+
+    @cherrypy.expose
+    def 生成(self):
+        return ''.join(random.sample(string.hexdigits, 8))
+
+
+if __name__ == '__main__':
+    cherrypy.quickstart(StringGenerator())
+```
+
+此时，将创建子路径 `http://localhost:8080/生成`（不推荐使用中文）。
+
+#### [设置 URL 的参数](https://docs.cherrypy.org/en/latest/tutorials.html#tutorial-3-my-urls-have-parameters "Permalink to this headline")
+
+在前面的教程中，我们已经了解如何创建可以生成随机字符串的应用程序。现在假设您希望动态地指示该字符串的长度。
+
+```python
+import string
+import random
+import cherrypy
+
+
+class StringGenerator:
+    @cherrypy.expose
+    def index(self):
+        return "你好世界！"
+
+    @cherrypy.expose
+    def generate(self, length=8):
+        return ''.join(random.sample(string.hexdigits, int(length)))
+
+
+if __name__ == '__main__':
+    cherrypy.quickstart(StringGenerator())
+```
+
+现在转到 `http://localhost:8080/generate?length=16`，浏览器将显示长度为 16 的生成字符串。请注意，我们也可以从 Python 的默认参数值中获益，以支持 URL，如 `http://localhost:8080/generate`。
+
+在这样的 URL 中，后面的部分 `?` 称为查询字符串。一般地，查询字符串通过传递一组（键、值）对来将 URL 上下文化（contextualize）。它们的格式是 `key=value`，且使用 `&` 分隔。
+
+注意我们必须转换给定的 `length` 值为整数。实际上，值是作为字符串从客户端发送到服务器的。
+
+与 CherryPy 将 URL 路径段映射到公开的函数很相似，查询字符串键映射到公开的函数参数。
+
+下面介绍一些进阶是教程。
 
 ### 简单的配置
 
-函数 `quickstart(root=None, script_name='', config=None)`，有应该参数 `config` 可以修改一些配置参数。
+在继续之前，让我们讨论一下关于配置的消息。默认情况下，CherryPy 有一个特性，它将检查配置应用程序时可以提供的设置的语法正确性。如果没有提供，日志中将显示警告消息。那根原木是无害的，不会阻止 CherryPy 工作。你可以参考 [配置的文档](https://docs.cherrypy.org/en/latest/basics.html#perappconf) 了解如何设置配置。
+
+函数 `quickstart(root=None, script_name='', config=None)`，利用参数 `config` 可以修改一些配置参数。
 
 `config` 可以是包含应用程序配置的文件或字典（`dict`）。如果包含 `[global]` 部分，这些配置项将在（站点范围内） `global` 中使用配置。下面创建一个配置文件 `base-server.toml`，内容如下：
 
@@ -140,7 +267,7 @@ class HelloWorld:
         # CherryPy 将为根 URI（"/"）调用此方法，并将其返回值发送给客户端
         return "Hello World!"
 
-config = 'configs/base-server.toml'
+config = 'configs/base-server.toml' # 这里也可以是 dict 形式
 cherrypy.quickstart(HelloWorld(), config=config)
 ```
 
@@ -183,14 +310,14 @@ import toml
 
 
 class Bunch(dict):
-    def __init__(self, *args, **kw):
-        super().__init__(*args, **kw)
+    def __init__(self, **kw):
+        super().__init__(**kw)
         self.__dict__ = self
 
 
 def load_option(path):
     opt = toml.load(path)
-    return Bunch(opt)
+    return Bunch(**opt)
 
 
 def load_template(path):
@@ -226,18 +353,18 @@ class Html:
         else:
             return {}
 
+    @property
+    def config(self):
+        return self._configure
+
     def __repr__(self):
-        return self.template.substitute(self.configure)
+        return self.template.substitute(self.config)
 
     def encode(self, encoding='utf-8'):
         return repr(self).encode(encoding)
 
-    @property
-    def configure(self):
-        return self._configure
-
-    def update_content(self, config):
-        self.configure.update(config)
+    def update(self, config):
+        self.config.update(config)
 ```
 
 自此，便完成对 HTML 的解析，使用如下：
@@ -291,11 +418,11 @@ httpd = TemplateHtml(template_path, config_path)
 d = {'body': '''<h1>欢迎进入 Web 世界 <h1>
 <p>CherryPy</p>
 '''}
-httpd.update_content(d) # 更新 HTML
+httpd.update(d) # 更新 HTML
 cherrypy.quickstart(httpd, config=config)
 ```
 
-### GET 请求
+### 提交表单
 
 编写一个 GET 请求：
 
@@ -319,10 +446,19 @@ class TemplateHtml(Html):
     def generate(self, length=8):
         return ''.join(random.sample(string.hexdigits, int(length)))
 
+    def quickstart(self, script_name='', app_config=None):
+        cherrypy.quickstart(self, script_name, app_config)
+
 
 template_path = 'templates/form.html'
 config_path = 'configs/form.toml'
 config = 'configs/base-server.toml'
 httpd = TemplateHtml(template_path, config_path)
-cherrypy.quickstart(httpd, config=config)
+httpd.quickstart(app_config=config)
 ```
+
+请注意，在此示例中，表单使用 `GET` 方法，并且当您按下 `Give it now!` 按钮，使用与上一教程相同的 URL 发送表单。HTML 表单还支持 `POST` 方法，在这种情况下，查询字符串不会附加到 URL，而是作为客户端请求主体发送给服务器的。但是，这不会更改您应用程序的 `exposed` 方法，因为 CherryPy 以相同的方式处理这两种情况，并使用 `exposed` 的处理程序参数来处理查询字符串 `(key, value)` 对。
+
+### [跟踪最终用户的活动](https://docs.cherrypy.org/en/latest/tutorials.html#id8)
+
+应用程序需要一段时间跟踪用户的活动并不少见。通常的机制是使用在用户和您的应用程序之间的对话过程中携带的 [会话标识符](http://en.wikipedia.org/wiki/Session_(computer_science)#HTTP_session_token)。
