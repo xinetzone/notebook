@@ -424,6 +424,29 @@ cherrypy.quickstart(httpd, config=config)
 
 ### 提交表单
 
+创建 HTML 模板：
+
+```html
+<!DOCTYPE html>
+<html lang="${lang}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+</head>
+
+<body>
+    <form method="get" action="generate">
+        <label for="gen">字符串的长度：</label>
+        <input type="text" id="gen" value="8" name="length">
+        <button type="submit">Give it now!</button>
+    </form>
+</body>
+
+</html>
+```
+
 编写一个 GET 请求：
 
 ```python
@@ -462,3 +485,175 @@ httpd.quickstart(app_config=config)
 ### [跟踪最终用户的活动](https://docs.cherrypy.org/en/latest/tutorials.html#id8)
 
 应用程序需要一段时间跟踪用户的活动并不少见。通常的机制是使用在用户和您的应用程序之间的对话过程中携带的 [会话标识符](http://en.wikipedia.org/wiki/Session_(computer_science)#HTTP_session_token)。
+
+需要修改服务器的配置（`configsbase-server.toml`）：
+
+```toml
+[global]
+server.socket_host = "127.0.0.1"
+server.socket_port = 9999
+server.thread_pool = 10
+
+[/]
+tools.sessions.on: True
+```
+
+使用下面的代码启动服务器：
+
+```python
+import random
+import string
+
+import cherrypy
+from app.htmlx import Html
+
+
+class TemplateHtml(Html):
+    def __init__(self, template_path, config_path):
+        super().__init__(template_path, config_path)
+
+    @cherrypy.expose
+    def index(self):
+        yield self.encode('utf-8')
+
+    @cherrypy.expose
+    def generate(self, length=8):
+        some_string = ''.join(random.sample(string.hexdigits, int(length)))
+        cherrypy.session['mystring'] = some_string
+        return some_string
+
+    @cherrypy.expose
+    def display(self):
+        return cherrypy.session['mystring']
+
+    def quickstart(self, script_name='', config=None):
+        cherrypy.quickstart(self, script_name, config)
+
+
+template_path = 'templates/form.html'
+config_path = 'configs/form.toml'
+config = 'configs/base-server.toml'
+httpd = TemplateHtml(template_path, config_path)
+httpd.quickstart(config=config)
+```
+
+最终的效果是：
+
+![](display.png)
+
+在本例中，我们生成的字符串并存储在当前会话中。如果您转到 `http://localhost:8080/`，生成一个随机字符串，然后转到 `http://localhost:8080/display`，您将看到刚刚生成的字符串。
+
+其中 `tools.sessions.on: True` 向您展示了如何在 CherryPy 应用程序中启用会话支持。默认情况下，CherryPy 会将会话保存在进程的内存中。[backends](https://www.osgeo.cn/cherrypy/basics.html#basicsession) 提供更持久的支持。
+
+<article>
+    <div class="tab-set w3-light-grey">
+        <input checked id="tab-set--1-input--1" name="tab-set--1" type="radio">
+        <label for="tab-set--1-input--1">Input</label>
+        <div class="tab-content w3-padding">
+            
+        </div>
+        <input id="tab-set--1-input--2" name="tab-set--1" type="radio">
+        <label for="tab-set--1-input--2">Output</label>
+        <div class="tab-content w3-padding">
+            <img src="cherrypy/display.png" alt="对比">
+        </div>
+    </div>
+</article>
+
+### [关于 JavaScripts, CSS 和 图片](https://docs.cherrypy.org/en/latest/tutorials.html#tutorial-6-what-about-my-javascripts-css-and-images "Permalink to this headline")
+
+Web 应用程序通常由静态内容组成，如 JavaScript、CSS 文件或图像。CherryPy 提供了为最终用户提供静态内容的支持。
+
+假设您希望将样式表与应用程序关联，以显示蓝色背景色。
+
+首先，将以下样式表保存到名为 `main.css` 并存储到本地目录中 `public/css`。
+
+```css
+body {
+    background-color: blue;
+}
+```
+
+模板 HTML 则为：
+
+```html
+<!DOCTYPE html>
+<html lang="${lang}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <link href="/static/css/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <form method="get" action="generate">
+        <label for="gen">字符串的长度：</label>
+        <input type="text" id="gen" value="8" name="length">
+        <button type="submit">Give it now!</button>
+    </form>
+</body>
+
+</html>
+```
+
+服务器代码：
+
+```python
+import random
+import string
+import os
+
+import cherrypy
+from app.htmlx import Html
+
+
+class TemplateHtml(Html):
+    def __init__(self, template_path, config_path):
+        super().__init__(template_path, config_path)
+
+    @cherrypy.expose
+    def index(self):
+        yield self.encode('utf-8')
+
+    @cherrypy.expose
+    def generate(self, length=8):
+        some_string = ''.join(random.sample(string.hexdigits, int(length)))
+        cherrypy.session['mystring'] = some_string
+        return some_string
+
+    @cherrypy.expose
+    def display(self):
+        return cherrypy.session['mystring']
+
+    def quickstart(self, script_name='', server_config=None):
+        cherrypy.quickstart(self, script_name, server_config)
+
+
+template_path = 'templates/form.html'
+config_path = 'configs/form.toml'
+# config = 'configs/base-server.toml'
+conf = {
+    'global': {
+        'server.socket_port': 9999
+    },
+    '/': {
+        'tools.sessions.on': True,
+        'tools.staticdir.root': os.path.abspath(os.getcwd())
+    },
+    '/static': {
+        'tools.staticdir.on': True,
+        'tools.staticdir.dir': './public'
+    }
+}
+# cherrypy.config.update(conf)
+httpd = TemplateHtml(template_path, config_path)
+httpd.quickstart(server_config=conf)
+```
+
+在 `http://localhost:9999/` 上，您应该看到一个鲜艳的蓝色。
+
+CherryPy 提供了服务于单个文件或完整目录结构的支持。大多数情况下，这就是您将要做的，这就是上面的代码所演示的。首先，我们指出 [`root`](https://docs.cherrypy.org/en/latest/pkg/cherrypy.html#cherrypy.Application.root "cherrypy.Application.root") 所有静态内容的目录。出于安全考虑，这必须是绝对路径。如果在寻找与URL匹配的路径时只提供相对路径，CherryPy 会抱怨。
+
+然后我们指出路径段以之开头的所有URL `/static` 将用作静态内容。我们将该URL映射到 `public` 目录，它是 [`root`](https://docs.cherrypy.org/en/latest/pkg/cherrypy.html#cherrypy.Application.root "cherrypy.Application.root") 的直接子目录。整个 `public` 目录的子树将用作静态内容。CherryPy 将把 URL 映射到该目录中的路径。这就是为什么 `/static/css/main.css` 发现于 `public/css/main.css` .
