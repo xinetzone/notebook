@@ -29,9 +29,7 @@ $$f^0(x) = x, f^1(x) = f(x), f^2(x) = f(f(x)), \cdots, f^{n+1}(x) = f(f^n(x))$$
 
 如果有一个可逆的函数 $\varphi$，取 $F(x) = \varphi^{-1} \circ f \circ \varphi(x)$，则有
 
-$$
-F(F(x)) = \varphi^{-1} \circ f \circ \varphi \circ \varphi^{-1} \circ f \circ \varphi(x) = \varphi^{-1} \circ f^2 \circ \varphi(x)
-$$
+$$F(F(x)) = \varphi^{-1} \circ f \circ \varphi \circ \varphi^{-1} \circ f \circ \varphi(x) = \varphi^{-1} \circ f^2 \circ \varphi(x)$$
 
 更一般的 $F^n(x) = \varphi^{-1} \circ f^n \circ \varphi(x)$.
 
@@ -45,9 +43,7 @@ $$
 
 【解】观察 $F(x)$ 形似 $f(x) = \frac{x}{x+c}$，故c^k而，我们可以设 $\varphi(x) = x^2$，有 $\varphi^{-1}(x) = \sqrt{x}$. 先求得
 
-$$
-f^n(x) = \frac{x}{\sqrt{x^2\sum_{k=0}^{n-1} c^k + c^n}}
-$$
+$$f^n(x) = \frac{x}{\sqrt{x^2\sum_{k=0}^{n-1} c^k + c^n}}$$
 
 则 $F^n(x) = \frac{x}{\sqrt{x^2\sum_{k=0}^{n-1} c^k + c^n}}$.
 
@@ -55,20 +51,14 @@ $$
 
 【解】令 $F(x) = \frac{x^2}{2x - 1}$，则命题转换为求 $F^n(x)$ 的极限。
 
-$$
-F(x) = \frac{x^2}{x^2 - (x - 1)^2} = \frac 1 {1 - (1 - \frac 1 x)^2}
-$$
+$$F(x) = \frac{x^2}{x^2 - (x - 1)^2} = \frac 1 {1 - (1 - \frac 1 x)^2}$$
 
 取 $\varphi(x) = 1 - \frac 1 x$，有 $\varphi^{-1}(x) = \frac 1 {1 - x}$，$f(x) = x^2$，于是
 
-$$
-F^n(x) = \frac 1 {1 - (1 - \frac 1 x)^{2^n}}
-$$
+$$F^n(x) = \frac 1 {1 - (1 - \frac 1 x)^{2^n}}$$
 
 最终
 
-$$
-a_n = F^n(2) = \frac 1 {1 - 2^{-2n}}
-$$
+$$a_n = F^n(2) = \frac 1 {1 - 2^{-2n}}$$
 
 因而 $\lim\limits_{n\to \infty} a_n = 1$.

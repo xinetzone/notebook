@@ -90,28 +90,15 @@ $$\cos{\cfrac A 2} = \sqrt{\cfrac{p(p-a)}{bc}}$$
 
 $$\cfrac r R = 4 \sin{\cfrac A 2} \sin{\cfrac B 2} \sin{\cfrac C 2} = \cos A + \cos B + \cos C - 1$$
 
-$$\cfrac {r_a} R =  4 \sin{\cfrac A 2} \cos{\cfrac B 2} \cos{\cfrac C 2}
-$$
+$$\cfrac {r_a} R =  4 \sin{\cfrac A 2} \cos{\cfrac B 2} \cos{\cfrac C 2}$$
 
 其中 $r_a$ 为角 $\angle A$ 所对应的旁切圆半径。
 
 7. 面积公式：
 
-$$
-S = \frac 1 2 ab \sin C
-= rp$$
-$$
-S = \sqrt{p(p-a)(p-b)(p-c)}
-= 2R^2 \sin A \sin B \sin C
-$$
+$$S = \frac 1 2 ab \sin C = rp$$
+$$S = \sqrt{p(p-a)(p-b)(p-c)} = 2R^2 \sin A \sin B \sin C$$
 
-$$
-S
-= \cfrac {abc} {4R}
-= \frac 1 2 R^2 (\sin{2A} + \sin{2B}+ \sin{2C})
-$$
+$$S = \cfrac {abc} {4R} = \frac 1 2 R^2 (\sin{2A} + \sin{2B}+ \sin{2C})$$
 
-$$
-S
-= \cfrac{a^2 \sin B \sin C}{2 \sin(B+C)}
-$$
+$$S = \cfrac{a^2 \sin B \sin C}{2 \sin(B+C)}$$

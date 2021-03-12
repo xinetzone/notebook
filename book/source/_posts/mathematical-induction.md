@@ -44,23 +44,21 @@ password:
 
 当 $m=1$ 时，有：
 
-$$
-A_2 = \frac{1}{2} (a_1 + a_2) = \frac{1}{2} (\sqrt{a_1} - \sqrt{a_2})^2 + \sqrt{a_1a_2} \geq \sqrt{a_1a_2} = G_2
-$$
+$$A_2 = \frac{1}{2} (a_1 + a_2) = \frac{1}{2} (\sqrt{a_1} - \sqrt{a_2})^2 + \sqrt{a_1a_2} \geq \sqrt{a_1a_2} = G_2$$
 
 等号当且仅当 $a_1 = a_2$ 时成立。即 $m=1$ 时，$A_{2^m} \geq G_{2^m}$ 成立。
 
 假设当 $m=k \in \mathbb{N}$ 时，不等式成立，即 $A_{2^k} \geq G_{2^k}$。于是，当 $m = k+1$ 时有：
 
-\[
-\begin{aligned}
+<article>
+$$\begin{aligned}
 A_{2^{k+1}} &= \frac{1}{2^{k+1}} (a_1 +a_2+\cdots + a_{2^{k+1}})\\
 &= \frac{1}{2} \cdot \frac{1}{2^{k}}\left[(a_1 + \cdots + a_{2^k}) + (a_{2^k+1} + \cdots + a_{2^{k+1}})\right]\\
 &\geq \frac 1 2 (\sqrt[2^k] {a_1\ldots a_{2^k}} + \sqrt[2^k] {a_{2^k+1}\ldots a_{2^{k+1}}})\\
 &\geq \sqrt[2^{k+1}] {a_1\ldots a_{2^k}a_{2^k+1}\ldots a_{2^{k+1}}}
 = G_{2^{k+1}}
-\end{aligned}
-\]
+\end{aligned}$$
+</article>
 
 
 $$
@@ -69,13 +67,15 @@ $$
 
 事实上，我们令 $a_k = \frac 1 {k-1} (a_1 + a_2 + \ldots + a_{k-1})$，则
 
-\[
+<article>
+$$
 \begin{aligned}
 A_{k-1} &= a_k = \frac{(k-1)(a_k) + a_k}{k} \\
 &= \frac 1 k (a_1 + a_2 + \ldots + a_k)\\
 &\ge \sqrt[k]{a_1\ldots a_{k-1} \cdot a_k}
 \end{aligned}
-\]
+$$
+</article>
 
 故而 $A_{k-1}^k \ge (G_{k-1})^{k-1} A_{k-1}$，即 $A_{k-1} \ge G_{k-1}$ 成立。
 
