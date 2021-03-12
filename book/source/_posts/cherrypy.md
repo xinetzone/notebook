@@ -910,3 +910,453 @@ if __name__ == '__main__':
 转到 `http://127.0.0.1:8080/` 并使用输入和按钮来生成，替换或删除字符串。请注意，页面只是部分内容而没有刷新。
 
 还请注意，您的前端如何使用简单但干净的 Web 服务 API 与后端进行对话。非 HTML 客户端可以轻松使用相同的 API。
+
+### [数据是我的全部生命](https://docs.cherrypy.org/en/latest/tutorials.html#id12)
+
+到目前为止，所有生成的字符串都保存在会话中，默认情况下存储在进程内存中。虽然，您可以将会话保留在磁盘或分布式内存存储中，但从长远来看，这不是正确的方法。会话在那里可以识别您的用户，并携带用户执行的操作所需的尽可能少的数据。
+
+要存储，持久化和查询数据，您需要适当的数据库服务器。有多种范式支持可供选择：
+
+- 关系：PostgreSQL，SQLite，MariaDB，Firebird
+- 面向列：HBase，Cassandra
+- 密钥库：redis，memcached
+- 面向文档：Couchdb，MongoDB
+- 面向图形的：neo4j
+
+让我们关注关系型，因为它们是最常见的，并且可能是您首先要学习的。
+
+为了减少这些教程的依赖关系数量，我们将使用 Python 直接支持的 `sqlite` 数据库。
+
+我们的应用程序将替换会话中生成的字符串到 SQLite 数据库的存储。该应用程序将具有与上节教程相同的 HTML 代码。因此，我们仅关注应用程序代码本身：
+
+```python
+import os, os.path
+import random
+import sqlite3
+import string
+import time
+
+import cherrypy
+
+DB_STRING = "my.db"
+
+
+class StringGenerator(object):
+    @cherrypy.expose
+    def index(self):
+        return open('index.html')
+
+
+@cherrypy.expose
+class StringGeneratorWebService(object):
+
+    @cherrypy.tools.accept(media='text/plain')
+    def GET(self):
+        with sqlite3.connect(DB_STRING) as c:
+            cherrypy.session['ts'] = time.time()
+            r = c.execute("SELECT value FROM user_string WHERE session_id=?",
+                          [cherrypy.session.id])
+            return r.fetchone()
+
+    def POST(self, length=8):
+        some_string = ''.join(random.sample(string.hexdigits, int(length)))
+        with sqlite3.connect(DB_STRING) as c:
+            cherrypy.session['ts'] = time.time()
+            c.execute("INSERT INTO user_string VALUES (?, ?)",
+                      [cherrypy.session.id, some_string])
+        return some_string
+
+    def PUT(self, another_string):
+        with sqlite3.connect(DB_STRING) as c:
+            cherrypy.session['ts'] = time.time()
+            c.execute("UPDATE user_string SET value=? WHERE session_id=?",
+                      [another_string, cherrypy.session.id])
+
+    def DELETE(self):
+        cherrypy.session.pop('ts', None)
+        with sqlite3.connect(DB_STRING) as c:
+            c.execute("DELETE FROM user_string WHERE session_id=?",
+                      [cherrypy.session.id])
+
+
+def setup_database():
+    """
+    Create the `user_string` table in the database
+    on server startup
+    """
+    with sqlite3.connect(DB_STRING) as con:
+        con.execute("CREATE TABLE user_string (session_id, value)")
+
+
+def cleanup_database():
+    """
+    Destroy the `user_string` table from the database
+    on server shutdown.
+    """
+    with sqlite3.connect(DB_STRING) as con:
+        con.execute("DROP TABLE user_string")
+
+
+if __name__ == '__main__':
+    conf = {
+        '/': {
+            'tools.sessions.on': True,
+            'tools.staticdir.root': os.path.abspath(os.getcwd())
+        },
+        '/generator': {
+            'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
+            'tools.response_headers.on': True,
+            'tools.response_headers.headers': [('Content-Type', 'text/plain')],
+        },
+        '/static': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': './public'
+        }
+    }
+
+    cherrypy.engine.subscribe('start', setup_database)
+    cherrypy.engine.subscribe('stop', cleanup_database)
+
+    webapp = StringGenerator()
+    webapp.generator = StringGeneratorWebService()
+    cherrypy.quickstart(webapp, '/', conf)
+```
+
+首先，让我们看看如何创建两个函数来创建和销毁数据库中的表。这些函数在第 85-86 行注册到 CherryPy 的服务器上，以便在服务器启动和停止时调用它们。
+
+接下来，请注意我们如何用对数据库的调用替换所有会话代码。我们使用会话 ID 在数据库中标识用户的字符串。由于会话将在一段时间后消失，因此这可能不是正确的方法。一个更好的主意是将用户的登录名或更具弹性的唯一标识符相关联。为了我们的演示，应该这样做。
+
+<article class="w3-green">
+<p class="w3-yellow">重要的</p>
+<p>
+在此示例中，我们仍然必须将会话设置为虚拟值，以免 CherryPy 在每次请求时都丢弃该会话。由于我们现在使用数据库存储生成的字符串，因此我们仅在会话内部存储一个虚拟时间戳。
+</p>
+</article>
+
+<article class="w3-green">
+<p class="w3-yellow">笔记</p>
+<p>
+不幸的是，Python 中的 `sqlite` 禁止我们在线程之间共享连接。由于 CherryPy 是多线程服务器，因此这将是一个问题。这就是为什么我们在每次调用时打开和关闭与数据库的连接的原因。这显然不是真正的生产友好，并且建议使用功能更强大的数据库引擎或更高级别的库（例如 SQLAlchemy）来更好地满足应用程序的需求。
+</p>
+</article>
+
+### 使用 `React.js` 使其成为现代的单页应用程序
+
+近年来，客户端单页应用程序（SPA）逐渐吃掉了服务器端生成的内容网络应用程序的午餐。
+
+本教程演示了如何与 `React.js` 集成，`React.js` 是 Facebook 在 2013 年发布的 SPA Java 语言库。请参考 `React.js` 文档以了解更多信息。
+
+为了演示它，让我们使用上节教程中的代码。但是，我们将替换 HTML 和 JavaScript 代码。
+
+首先，让我们看看我们的 HTML 代码是如何变化的：
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="/static/css/style.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+</head>
+
+<body>
+    <div id="generator"></div>
+    <script type="text/babel" src="static/js/gen.js"></script>
+</body>
+
+</html>
+```
+
+基本上，我们删除了使用 jQuery 的整个 JavaScript 代码。取而代之的是，我们加载 `React.js` 库以及一个名为 `gen.js` 的新本地 JavaScript 模块，该模块位于 `public/js` 目录中：
+
+```js
+var StringGeneratorBox = React.createClass({
+  handleGenerate: function() {
+    var length = this.state.length;
+    this.setState(function() {
+      $.ajax({
+        url: this.props.url,
+        dataType: 'text',
+        type: 'POST',
+        data: {
+          "length": length
+        },
+        success: function(data) {
+          this.setState({
+            length: length,
+            string: data,
+            mode: "edit"
+          });
+        }.bind(this),
+        error: function(xhr, status, err) {
+          console.error(this.props.url,
+            status, err.toString()
+          );
+        }.bind(this)
+      });
+    });
+  },
+  handleEdit: function() {
+    var new_string = this.state.string;
+    this.setState(function() {
+      $.ajax({
+        url: this.props.url,
+        type: 'PUT',
+        data: {
+          "another_string": new_string
+        },
+        success: function() {
+          this.setState({
+            length: new_string.length,
+            string: new_string,
+            mode: "edit"
+          });
+        }.bind(this),
+        error: function(xhr, status, err) {
+          console.error(this.props.url,
+            status, err.toString()
+          );
+        }.bind(this)
+      });
+    });
+  },
+  handleDelete: function() {
+    this.setState(function() {
+      $.ajax({
+        url: this.props.url,
+        type: 'DELETE',
+        success: function() {
+          this.setState({
+            length: "8",
+            string: "",
+            mode: "create"
+          });
+        }.bind(this),
+        error: function(xhr, status, err) {
+          console.error(this.props.url,
+            status, err.toString()
+          );
+        }.bind(this)
+      });
+    });
+  },
+  handleLengthChange: function(length) {
+    this.setState({
+      length: length,
+      string: "",
+      mode: "create"
+    });
+  },
+  handleStringChange: function(new_string) {
+    this.setState({
+      length: new_string.length,
+      string: new_string,
+      mode: "edit"
+    });
+  },
+  getInitialState: function() {
+    return {
+      length: "8",
+      string: "",
+      mode: "create"
+    };
+  },
+  render: function() {
+    return (
+      <div className="stringGenBox">
+            <StringGeneratorForm onCreateString={this.handleGenerate}
+                                 onReplaceString={this.handleEdit}
+                                 onDeleteString={this.handleDelete}
+                                 onLengthChange={this.handleLengthChange}
+                                 onStringChange={this.handleStringChange}
+                                 mode={this.state.mode}
+                                 length={this.state.length}
+                                 string={this.state.string}/>
+      </div>
+    );
+  }
+});
+
+var StringGeneratorForm = React.createClass({
+  handleCreate: function(e) {
+    e.preventDefault();
+    this.props.onCreateString();
+  },
+  handleReplace: function(e) {
+    e.preventDefault();
+    this.props.onReplaceString();
+  },
+  handleDelete: function(e) {
+    e.preventDefault();
+    this.props.onDeleteString();
+  },
+  handleLengthChange: function(e) {
+    e.preventDefault();
+    var length = React.findDOMNode(this.refs.length).value.trim();
+    this.props.onLengthChange(length);
+  },
+  handleStringChange: function(e) {
+    e.preventDefault();
+    var string = React.findDOMNode(this.refs.string).value.trim();
+    this.props.onStringChange(string);
+  },
+  render: function() {
+    if (this.props.mode == "create") {
+      return (
+        <div>
+           <input  type="text" ref="length" defaultValue="8" value={this.props.length} onChange={this.handleLengthChange} />
+           <button onClick={this.handleCreate}>Give it now!</button>
+        </div>
+      );
+    } else if (this.props.mode == "edit") {
+      return (
+        <div>
+           <input type="text" ref="string" value={this.props.string} onChange={this.handleStringChange} />
+           <button onClick={this.handleReplace}>Replace</button>
+           <button onClick={this.handleDelete}>Delete it</button>
+        </div>
+      );
+    }
+
+    return null;
+  }
+});
+
+React.render(
+  <StringGeneratorBox url="/generator" />,
+  document.getElementById('generator')
+);
+```
+
+哇！ 如此简单的代码需要很多代码，不是吗？入口点是最后几行，表示我们要在生成器 `div` 中呈现StringGeneratorBox React.js 类的 HTML 代码。
+
+呈现页面时，该组件也将呈现。请注意，它也是如何由另一个呈现表单本身的组件组成的。
+
+对于这样一个简单的示例，这可能有点过头，但是希望可以使您在此过程中开始使用 React.js。
+
+没什么可说的，希望该代码的含义很清楚。该组件具有内部状态，在该状态下，我们存储用户生成/修改的当前字符串。
+
+当用户更改输入框的内容时，状态将在客户端更新。然后，当单击一个按钮时，该状态将使用 API 端点发送到后端服务器，并执行适当的操作。然后，状态将更新，视图也将更新。
+
+## 组织你的代码
+
+CherryPy 具有强大的体系结构，可帮助您以一种易于维护和灵活的方式来组织代码。
+
+您可以使用几种机制，本教程将重点介绍三个主要机制：
+
+* [dispatchers](https://docs.cherrypy.org/en/latest/extend.html#dispatchers)
+* [tools](https://docs.cherrypy.org/en/latest/extend.html#tools)
+* [plugins](https://docs.cherrypy.org/en/latest/extend.html#busplugins)
+
+为了理解它们，让我们假设您在一家大型超市中：
+
+- 您有多个收银台，每个人都在排队（这些都是您的要求）
+- 您可以在各个部分中找到食物和其他内容（这些是您的数据）
+- 最终，您将拥有一家大型超市人员及其日常任务，以确保各个部分始终井井有条（这是您的后端）
+
+尽管确实很简单，但这离您的应用程序的行为并不遥远。CherryPy 可帮助您以反映这些高级思想的方式来构建应用程序。
+
+### [Dispatchers](https://docs.cherrypy.org/en/latest/tutorials.html#id15)
+
+回到超市示例，您可能希望基于 收银台 执行操作：
+
+- 存放少于十个物品的篮子的收银台
+- 为残障人士的收银台
+- 孕妇的收银台
+- 一个只能使用商店卡的收银台
+
+为了支持这些用例，CherryPy 提供了一种称为 [dispatcher](https://docs.cherrypy.org/en/latest/extend.html#dispatchers) 的机制。在请求处理期间的早期执行调度程序，以确定应用程序的哪段代码将处理传入的请求。或者，要继续进行商店类比，`dispatcher` 将决定引导顾客到哪一个。
+
+### [Tools](https://docs.cherrypy.org/en/latest/tutorials.html#id16)
+
+假设您的商店决定经营折扣大礼包，但仅针对特定类别的客户。CherryPy 将通过称为 [工具](https://docs.cherrypy.org/en/latest/extend.html#tools) 的机制来处理此类用例。
+
+`工具`是一段代码，它在每个请求的基础上运行，以执行其他工作。通常，工具是一个简单的 Python 函数，它在 CherryPy 的请求过程中的给定时间执行。
+
+### [Plugins](https://docs.cherrypy.org/en/latest/tutorials.html#id17)
+
+如我们所见，这家商店有一群人专门管理库存并处理任何顾客的期望。
+
+在 CherryPy 世界中，这转化为具有可以在任何请求生命周期之外运行的功能。这些功能应处理后台任务，长期连接（例如与数据库的连接）等。
+
+之所以称呼其为[插件](https://docs.cherrypy.org/en/latest/extend.html#busplugins)，是因为它们与 CherryPy 引擎一起使用并随着您的操作进行扩展。
+
+## 使用 pytest 和代码覆盖率
+
+### [Pytest](https://docs.cherrypy.org/en/latest/tutorials.html#id19)
+
+编写一个简单的例子：
+
+```python
+# tut12.py
+import string
+
+import cherrypy
+
+
+class StringGenerator(object):
+    @cherrypy.expose
+    def index(self):
+        return "Hello world!"
+
+    @cherrypy.expose
+    def generate(self):
+        return ''.join(random.sample(string.hexdigits, 8))
+
+
+if __name__ == '__main__':
+    cherrypy.quickstart(StringGenerator())
+```
+
+编写测试文件：
+
+```python
+# test_tut12.py
+import cherrypy
+from cherrypy.test import helper
+
+from tut12 import StringGenerator
+
+
+class SimpleCPTest(helper.CPWebCase):
+    @staticmethod
+    def setup_server():
+        cherrypy.tree.mount(StringGenerator(), '/', {})
+
+    def test_index(self):
+        self.getPage("/")
+        self.assertStatus('200 OK')
+
+    def test_generate(self):
+        self.getPage("/generate")
+        self.assertStatus('200 OK')
+```
+
+启动测试：
+
+```shell
+$ pytest -v test_tut12.py
+```
+
+现在，我们有了一种巧妙的方法来进行应用程序测试。
+
+### [增加代码覆盖率](https://docs.cherrypy.org/en/latest/tutorials.html#id20)
+
+要获得代码覆盖率，只需运行：
+
+```shell
+pytest --cov=tut12 --cov-report term-missing test_tut12.py
+```
+
+要为 `pytest` [添加覆盖支持](https://pytest-cov.rtfd.io/)，您需要通过 `pip install pytest-cov` 进行安装。
+
+这告诉我们缺少一行。当然是因为仅在直接启动 Python 程序时才执行该操作。我们可以简单地在 `tut12.py` 中更改以下几行：
+
+```python
+if __name__ == '__main__':  # pragma: no cover
+    cherrypy.quickstart(StringGenerator())
+```
+
+在 CI 中使用时，您可能希望将 [Codecov](https://codecov.io/), [Landscape](https://landscape.io/) 或者 [Coveralls](https://coveralls.io/) 集成到项目中，以随时间存储和跟踪 coverage 数据。
