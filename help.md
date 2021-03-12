@@ -35,3 +35,4 @@ $ git clone https://github.com/xinetzone/matery.git
 ```
 4. 这样便可以开箱即用。
 5. 修改 `book/themes/matery/layout/_partial/social-link.ejs` 可以添加新的联系方式。
+6. 添加新的目录或者子目录，可以修改 `book/themes/matery/layout/_partial/navigation.ejs` 和 `book/_config.matery.yml` 的 `menu`。、
